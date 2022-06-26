@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    {% block title %}<title>{{ head_title }}</title>{% endblock %}
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Add additional CSS in static file -->
+    {% load static %}
+    <script src="{% static 'jquery/jquery-3.6.0.min.js' %}"></script>
+    
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap/icons/bootstrap-icons.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/script.js' %}"></script>
+
+</head>
+
+<body role="document">
+
+    {% if user.is_authenticated %}
+        {% include 'menu.html' %}
+    {% endif %}
+
+    <div class="container ak-container">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+
+</html>

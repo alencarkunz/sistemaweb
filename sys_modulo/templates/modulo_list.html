@@ -1,0 +1,59 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="page-header">
+  {% include 'messages.html' %}
+  <h1 class="display-6 pb-2 mb-3 border-bottom">{{ par_app.app_title }}</h1>
+</div>
+
+<form class="row gy-2 gx-3 align-items-center" method="post">
+  {% csrf_token %}
+  <div class="col-auto">
+    <a class="btn btn-sm btn-success" href="{% url par_app.app_insert %}"><i class="bi-btn bi-plus-circle"></i> Novo</a>
+  </div>
+  <div class="col-auto">
+    <input type="text" name="fil_des" value="{{fil_des}}" class="form-control" placeholder="Descrição" aria-label="Descrição">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-secondary"><i class="bi-btn bi-search"></i> Pesquisar</button>
+  </div>
+
+</form>
+
+
+<div class="table-responsive">
+  <table id="tlist" class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nome</th>
+        <th>Modelo</th>
+        <th>Menu</th>
+        <th>Ordem</th>
+        <th>Status</th>
+        <th class="bc">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ row.MOD_ID }}</td>
+        <td>{{ row.MOD_NOM }}</td>
+        <td>{{ row.MOD_MDL }}</td>
+        <td>{{ row.MEN_ID }}</td>
+        <td>{{ row.MOD_ORD }}</td>
+        <td>{{ row.get_status }}</td>
+        <td class="bc">
+          <a class="btn btn-sm btn-primary" href="{% url par_app.app_update row.pk %}"><i class="bi-btn bi-pencil-square"></i>  Editar</a>
+          {% if row.MOD_STA != 1 %}<a class="btn btn-sm btn-danger" href="{% url par_app.app_delete row.pk %}"><i class="bi-btn bi-trash"></i>  Deletar</a>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% include 'paginator.html' %}
+
+{% endblock %}

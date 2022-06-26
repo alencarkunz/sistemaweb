@@ -1,0 +1,91 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="content-form">
+    
+    <h2>Usuários</h2>
+
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.errors }}
+    </div>
+    {% endif %}
+
+    <div id="content-form">
+
+        <form id="form_edt" method="POST" class="post-form">
+            
+            {% csrf_token %}
+
+            {% load bootstrap %}
+
+            <div class="form-group"> 
+                <label>Nome</label>
+                <input type="text" name="first_name" class="form-control" placeholder="Nome" value="{{row.first_name}}">
+            </div>
+
+            <div class="form-group"> 
+                <label>Sobrenome</label>
+                <input type="text" name="last_name" class="form-control" placeholder="Sobrenome" value="{{row.last_name}}">
+            </div>
+
+            <div class="form-group"> 
+                <label>E-mail</label>
+                <input type="text" name="email" class="form-control" placeholder="E-mail" value="{{row.email}}">
+            </div>
+
+            {% if auth_group %}
+            <div class="form-group"> 
+                <label>Permissão</label>
+                <select class="form-select" name="auth_group">
+                    <option>---------</option>
+                    {% for key, value in auth_group %}
+                    <option value="{{ key }}" {% if auth_group_set == key %} selected {% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            <div class="form-group"> 
+                <label>Usuário</label>
+                <input type="text" name="username" class="form-control" placeholder="Usuário" value="{{row.username}}">
+            </div>
+            
+            
+            {% if row.id > 0 %}
+            <div class="form-group mt-2 mb-2 text-end">
+                <label>
+                    <a class="btn link-danger" href="{% url 'meu_password_update' row.id btn_cancel_inative %}"><i class="bi-btn bi-lock-fill"></i> Ir para alteração de senha</a>
+                </label>
+            </div>
+            {% else %}
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" name="password" class="form-control" placeholder="Senha" value="">
+                </div>
+            {% endif %}
+
+            {% if status_inative != True %}
+            <div class="form-check mt-2">
+                <input type="checkbox" class="form-check-input me-1" id="is_active" name="is_active" value="1" {% if row.id > 0 %}{{ row.get_is_checked }}{% else %} checked {% endif %} >
+                <label class="form-check-label" for="is_active">
+                    Ativo
+                </label>
+            </div>
+            {% endif %}
+
+            <div class="form-group mt-3">
+            {% if btn_salvar_inative != True %}
+                <button type="submit" class="btn btn-success btn-end-form"><i class="bi-btn bi-check-circle"></i> Salvar</button>
+                {% endif %}
+            {% if btn_cancel_inative != True %}
+                <a class="btn btn-danger btn-end-form" href="{% url 'usuario' %}"><i class="bi-btn bi-x-circle"></i> Cancelar</a>
+            {% endif %}
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+{% endblock %}

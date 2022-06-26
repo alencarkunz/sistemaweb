@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <div class="container">
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars"
+      aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbars">
+
+      <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+        {% for menu in request.session.menu %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="true">{{ menu.nome }}</a>
+          <ul class="dropdown-menu">
+            {% for modulo in request.session.modulo %}
+            {% if modulo.menu_id == menu.id %}
+            <li><a class="dropdown-item" href="/{{ modulo.rot }}">{{ modulo.nome }}</a></li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </li>
+        {% endfor %}
+
+        <li class="nav-item btn-group ak-cnt-user" data-bs-toggle="tooltip" data-bs-placement="left" title="Minha Conta">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="true">
+            <i class="bi bi-person-fill text-white"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-sm-end">
+            <li class="nm-user">{{ user.first_name }}</li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{% url 'meusdados' user.id %}">Meu Cadastro</a></li>
+            <li><a class="dropdown-item" href="{% url 'meu_password_update' user.id 1 %}">Altera senha</a></li>
+            <li><a class="dropdown-item m_i_exit" href="javascript:void(0)">Sair</a></li>
+          </ul>
+        </li>
+        <li class="ak-cnt-home nav-item" data-bs-toggle="tooltip" data-bs-placement="left" title="Ir para página inicial">
+          <a class="m_i_home" href="{% url 'index' %}">
+            <i class="bi bi-house-fill text-white"></i>
+          </a> 
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,38 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<div class="content-form">
+    
+    <h2>{{ par_app.app_title }}</h2>
+
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.errors }}
+    </div>
+    {% endif %}
+
+    <div id="content-form">
+
+        <form id="form_edt" method="POST" class="post-form">
+            
+            {% csrf_token %}
+
+            {% load bootstrap %}
+
+            {{ form|bootstrap }}
+            
+            <div class="form-group mt-3">
+            {% if btn_salvar_inative != True %}
+                <button type="submit" class="btn btn-success btn-end-form"><i class="bi-btn bi-check-circle"></i> Salvar</button>
+                {% endif %}
+            {% if btn_cancel_inative != True %}
+                <a class="btn btn-danger btn-end-form" href="{% url par_app.url_index %}"><i class="bi-btn bi-x-circle"></i> Cancelar</a>
+            {% endif %}
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    {% block title %}<title>{{ head_title }}</title>{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap/icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signin.css' %}">
+</head>
+
+<body class="text-center">
+
+    <main class="form-signin">
+        <form method="post">
+            {% csrf_token %}
+            
+            <h1 class="h3 mb-3 fw-normal">Dados de Acesso</h1>
+            
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} pb-2 ps-2"" role="alert">
+                    <i class="bi-btn bi-info-circle-fill"></i> {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {{form_login.username.errors}}
+
+            <div class="form-floating">    
+                <input type="text" class="form-control" id="floatingInput" placeholder="Usuário" name="username">
+                <label for="floatingInput">Usuário</label>                
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+                <label for="floatingPassword">Senha</label>
+            </div>
+
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
+            
+            <p class="mt-5 mb-3 text-muted"></p>
+
+        </form>
+    </main>
+
+</body>
+
+</html>
