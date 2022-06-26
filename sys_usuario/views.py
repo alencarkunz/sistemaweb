@@ -4,6 +4,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.db import connection
+from django.db.models import Q
 
 from sys_usuario.forms import UsuarioForm, UsuarioInsertForm, PasswordForm, UsuarioMeusDadosForm
 from sys_usuario.models import Usuario
@@ -37,11 +38,18 @@ def index(request):
     
     rows = Usuario.objects  
 
+    # regra para usuário  diferente de 1 - adm master
+    if request.user.id > 1: 
+        rows = rows.filter(id__gt=1) # > 1
+        rows = rows.filter(Q(id__exact=request.user.id) | Q(groups__gt=1)) ## groups join com USUARIOS_groups 
+
     if len(fil_des) > 0: 
         rows = rows.filter(first_name__iexact=fil_des)
     else:
         rows = rows.all()
 
+    rows = rows.order_by('username')
+    
     # paginação
     paginator = Paginator(rows, par_app['modulo']['num_pag'])
     page = int(request.GET.get('page', '1'))
@@ -68,20 +76,23 @@ def edit(request, pk=0):
         if form.is_valid(): 
             if pk > 0:
                 row = form.save()
+                row.group_id = request.POST['group_id'] # atualiza grupo
+                row.save()
             else: 
                 row = form.save()
                 row.password = make_password(row.password) ## or form.cleaned_data['password']
+                row.group_id = request.POST['group_id'] # atualiza grupo
                 row.save()
             
-            # gravar o grupo do usuário
-            if request.POST['auth_group'] is not None:
+            # gravar o grupo do usuário no relacionamento USUARIOS_groups
+            if request.POST['group_id'] is not None:
                 cursor = connection.cursor()
                 
                 query = "DELETE FROM USUARIOS_groups WHERE usuario_id = %s"
                 cursor.execute(query, [row.pk]).fetchone()
 
                 query = "INSERT INTO USUARIOS_groups(usuario_id, group_id) VALUES( %s , %s )"
-                cursor.execute(query, [row.pk, request.POST['auth_group']])
+                cursor.execute(query, [row.pk, request.POST['group_id']])
                         
 
             messages.success(request, _sistema.define()['form_save'])
@@ -91,7 +102,12 @@ def edit(request, pk=0):
 
     #grupos
     cursor = connection.cursor()
-    query = "select ag.id, ag.name from auth_group ag order by 1"
+    # não mostrar usuário 1 adm master
+    where = ''
+    if request.user.group_id > 1:
+        where = 'where id > 1'
+
+    query = "select ag.id, ag.name from auth_group ag "+where+" "   
     auth_group = cursor.execute(query).fetchall()
 
     #grupo do usuario
@@ -100,7 +116,6 @@ def edit(request, pk=0):
     result = cursor.execute(query, [pk]).fetchone()
     auth_group_set = result[0] if result is not None else '' 
  
-
     context = {
         'row': row,
         'form' : form,

@@ -10,7 +10,8 @@ class Usuario(AbstractUser):
     #USU_DES = models.TextField(blank=True)
     #PER_ID = models.ForeignKey(Permissao, db_column='PER_ID', on_delete=models.PROTECT, verbose_name="Permissão")
     session_key = models.CharField(blank=True, max_length=100, verbose_name='session_key')
-    
+    group_id = models.IntegerField(verbose_name="Permissão")
+
     class Meta:
         db_table = 'USUARIOS' # definir nome da tabela
         ordering = ['username'] # definir para não dar warning do pagination no console 

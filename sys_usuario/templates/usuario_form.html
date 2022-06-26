@@ -38,7 +38,7 @@
             {% if auth_group %}
             <div class="form-group"> 
                 <label>Permissão</label>
-                <select class="form-select" name="auth_group">
+                <select class="form-select" name="group_id">
                     <option>---------</option>
                     {% for key, value in auth_group %}
                     <option value="{{ key }}" {% if auth_group_set == key %} selected {% endif %}>{{ value }}</option>
