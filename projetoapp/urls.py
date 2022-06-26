@@ -22,3 +22,4 @@ urlpatterns += [
     path('menu/', include('sys_menu.urls')),
     path('modulo/', include('sys_modulo.urls')),
 ] 
+
