@@ -12,7 +12,7 @@ class Modulo(models.Model):
     MOD_NOM = models.CharField(max_length=100, verbose_name="Nome")
 
     cursor = connection.cursor()
-    query = 'select dct.model, dct.app_label from django_content_type dct order by dct.model'
+    query = 'select dct.model, dct.model app_label  from django_content_type dct order by dct.model' ## dct.app_label
     list_choices = cursor.execute(query).fetchall()
 
     MOD_MDL = models.CharField(max_length=100, choices=list_choices,verbose_name="Modelo")
