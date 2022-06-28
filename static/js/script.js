@@ -61,3 +61,51 @@ function modal_msg(msg,titulo){
 function remove_modal_msg(){
     ak_modal.hide();
 }
+
+function list_delete(url, _this)
+{
+    if(confirm('Tem certeza que deseja apagar o registro?'))
+    {
+        $.get(url, { }, function(data)
+        {
+            if(data.ok === true) 
+                return _this.parent().parent().remove();
+            
+            if(data.ok === false)
+                return alert('Não foi possível remover o registro!');
+            
+        }, 'json');
+    }
+}
+
+function list_delete_msg(url, _this,desc)
+{
+    if(confirm('Tem certeza que deseja apagar o registro ' + desc + '?'))
+    {
+        $.get(url, { }, function(data)
+        {
+            if(data.ok === true) 
+                return _this.parent().parent().remove();
+            
+            else if(data.ok === false && data.error === true)
+            {
+                if(confirm(data.msg)){
+                    $.get(url, { per : 1}, function(data)
+                    {
+                        if(data.ok === true) return _this.parent().parent().remove();
+                        else if(data.ok === false){ 
+                            if(data.msg.length > 1) return alert(data.msg);
+                            else return alert('Não foi possível remover o registro!');
+                        }
+                    }, 'json');
+                    
+                }
+            }
+            else if(data.ok === false){
+                if(data.msg.length > 1) return alert(data.msg);
+                else return alert('Não foi possivel remover o registro!');
+            }
+            
+        }, 'json');
+    }
+}

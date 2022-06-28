@@ -41,7 +41,7 @@ def loginUsuario(request):
             #montar menu e modulos conforme permissões
             cursor = connection.cursor()
             query = """ select 
-                            distinct m.MOD_ID, m.MOD_NOM, m.MOD_MDL, m.MEN_ID, me.MEN_NOM
+                            distinct m.MOD_ID, m.MOD_NOM, m.MOD_MDL, m.MEN_ID, me.MEN_NOM, m.MOD_NUMPAG
                         from USUARIOS_groups ug
                             inner join auth_group_permissions agp on ug.group_id  = agp.group_id 
                             inner join auth_permission ap on agp.permission_id = ap.id 
@@ -58,6 +58,7 @@ def loginUsuario(request):
             menu_id = 0
             modulo = []
             menu = []
+            modulo_app = {}
             for row in result:
                 modulo.append({
                     'id' : row[0], 
@@ -69,9 +70,17 @@ def loginUsuario(request):
                 if menu_id != row[3]:
                     menu_id = row[3]
                     menu.append({ 'id' : menu_id, 'nome' : row[4] })
+
+                modulo_app[row[2]] = {
+                    'modelo' : row[2],
+                    'titulo' : row[1],
+                    'num_pag' : (row[5] if row[5] > 0 else '25'),
+                }
+                
                     
             request.session['modulo'] = modulo
             request.session['menu'] = menu
+            request.session['modelo_app'] = modulo_app
 
             return redirect('index')
         else:
@@ -86,7 +95,7 @@ def loginUsuario(request):
         'form_login': form_login,
     }
 
-    return render(request, 'sistema_login.html', context = context)
+    return render(request, 'login.html', context = context)
 
 def logoutUsuario(request):
     logout(request)

@@ -1,36 +1,31 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required, login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.http import JsonResponse
 from django.contrib import messages
+from django.urls import resolve
+
 
 from sys_menu.models import Menu
 from sys_menu.forms import MenuForm
 import sistema.sistema as _sistema
 import sys_usuario.usuario as _usuario
 
+_app_name = 'menu'
 ## parametro para o app
-def get_parametros_app():
-    app_name = 'menu'
-    mod = _sistema.get_modulo(app_name)
-    app_nome = mod['modelo']
-    par_app = { 
-        'modulo'    : mod,
-        'app_title' : mod['titulo'],
-        'app_insert': mod['modelo']+'_insert', # url route
-        'app_update': mod['modelo']+'_update', # url route
-        'app_delete': mod['modelo']+'_delete', # url route
-        'html_list' : mod['modelo']+'_list.html', # render
-        'html_form' : mod['modelo']+'_form.html', # render
-        'url_index' : mod['modelo'], # redirect
-        'obj'       : Menu, # model
-        'obj_form'  : MenuForm, # form
-    }
-    return par_app
+def init(request):
+    _par_app = _sistema.get_parametros_app(request)
+    _render = _usuario.validar_sessao(request)
+    _user_perm = _usuario.get_view_permissao(_app_name,request.user.get_group_permissions())
+    
+    _par_app['obj'] = Menu
+    _par_app['obj_form'] = MenuForm
+    
+    return _par_app, _user_perm, _render
 
 @login_required(login_url='login')
-def index(request):
-    _render = _usuario.validar_sessao(request)
-    par_app = get_parametros_app()
+def index(request):  
+    par_app, user_perm, _render = init(request)
 
     fil_des = request.POST.get("fil_des",'').rstrip()
 
@@ -46,18 +41,20 @@ def index(request):
     page = int(request.GET.get('page', '1'))
     rows = paginator.get_page(page)
 
-    context = { 'rows': rows, 'fil_des' : fil_des, 'par_app' : par_app }
+    
+    context = { 'rows': rows, 'fil_des' : fil_des, 'par_app' : par_app, 'user_perm' : user_perm }
 
     if _render:
         return render(request, par_app['html_list'], context=context)
     else: 
         return redirect('login')
 
-@login_required(login_url='login') 
-#@permission_required('usuarios.add_usuario',login_url='index') # se sem permissão, retorna para tela de login
+
+@login_required(login_url='login') # sem login, retorna para login
+@permission_required(('sys_'+_app_name+'.add_'+_app_name,'sys_'+_app_name+'.change_'+_app_name),login_url='index') # (sys_menu.add_menu,sys_menu.change_menu) sem permissão, retorna para index
 def edit(request, pk=0):
-    par_app = get_parametros_app()
-    
+    par_app, user_perm, _render = init(request)
+
     obj = par_app['obj'] # model
     obj_form = par_app['obj_form'] # form
 
@@ -78,12 +75,24 @@ def edit(request, pk=0):
         'row': row,
         'form' : form,
         'par_app' : par_app,
+        'user_perm' : user_perm 
     }
 
     return render(request, par_app['html_form'], context=context)
 
+
 @login_required(login_url='login')
+@permission_required('sys_'+_app_name+'.delete_'+_app_name,login_url='index') # (sys_menu.delete_menu) sem permissão, retorna para index
 def delete(request, pk=0):  
-    par_app = get_parametros_app()
-    row = par_app['obj'].objects.get(MEN_ID=pk).delete() if pk > 0 else ''
-    return redirect(par_app['url_index']) 
+    par_app = init(request)[0]
+    row = par_app['obj'].objects.get(MEN_ID=pk).delete() if pk > 0 else '' 
+   
+    if row is not None:
+        ok = True
+        msg = '' 
+    else:
+        ok = True
+        msg = _sistema.define()['msg_erro_delete']
+        
+    return JsonResponse({'ok' : ok, 'msg' : msg})
+    #return redirect(par_app['url_index']) 

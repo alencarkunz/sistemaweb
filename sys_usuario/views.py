@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required, login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
 from django.contrib import messages
 from django.db import connection
 from django.db.models import Q
@@ -11,29 +12,22 @@ from sys_usuario.models import Usuario
 import sistema.sistema as _sistema
 import sys_usuario.usuario as _usuario
 
+_app_name = 'usuario'
 ## parametro para o app
-def get_parametros_app():
-    app_name = 'usuario'
-    mod = _sistema.get_modulo(app_name)
-    app_nome = mod['modelo']
-    par_app = { 
-        'modulo'    : mod,
-        'app_title' : mod['titulo'],
-        'app_insert': mod['modelo']+'_insert', # url route
-        'app_update': mod['modelo']+'_update', # url route
-        'app_delete': mod['modelo']+'_delete', # url route
-        'html_list' : mod['modelo']+'_list.html', # render
-        'html_form' : mod['modelo']+'_form.html', # render
-        'url_index' : mod['modelo'], # redirect
-        'obj'       : Usuario, # model
-        'obj_form'  : UsuarioForm, # form
-    }
-    return par_app
+def init(request):
+    _par_app = _sistema.get_parametros_app(request)
+    _render = _usuario.validar_sessao(request)
+    _user_perm = _usuario.get_view_permissao(_app_name,request.user.get_group_permissions())
+    
+    _par_app['obj'] = Usuario
+    _par_app['obj_form'] = UsuarioForm
+    
+    return _par_app, _user_perm, _render
 
 @login_required(login_url='login')
 def index(request):
-    _render = _usuario.validar_sessao(request)
-    par_app = get_parametros_app()
+    par_app, user_perm, _render = init(request)
+    
     fil_des = request.POST.get("fil_des",'').rstrip()
     
     rows = Usuario.objects  
@@ -55,21 +49,25 @@ def index(request):
     page = int(request.GET.get('page', '1'))
     rows = paginator.get_page(page)
 
-    context = { 'rows': rows, 'fil_des' : fil_des }
+    context = { 'rows': rows, 'fil_des' : fil_des, 'par_app' : par_app, 'user_perm' : user_perm }
 
     if _render:
         return render(request, 'usuario_list.html', context=context)
     else: 
-        return redirect('login') 
+        return redirect('login')
 
-@login_required(login_url='login') 
-#@permission_required('usuario.add_usuario',login_url='index') # se sem permissão, retorna para tela de login
+@login_required(login_url='login') # sem login, retorna para login
+@permission_required(('sys_'+_app_name+'.add_'+_app_name,'sys_'+_app_name+'.change_'+_app_name),login_url='index') # (sys_menu.add_menu,sys_menu.change_menu) sem permissão, retorna para index
 def edit(request, pk=0):
-    par_app = get_parametros_app()
-    row = par_app['obj'].objects.get(id=pk) if pk > 0 else ''
+    par_app, user_perm, _render = init(request)
+
+    obj = par_app['obj'] # model
+    obj_form = par_app['obj_form'] # for
+
+    row = obj.objects.get(id=pk) if pk > 0 else ''
     if request.method == "POST":
         if pk > 0:
-            form = UsuarioForm(request.POST, instance = row)
+            form = obj_form(request.POST, instance = row)
         else:
             form = UsuarioInsertForm(request.POST)
 
@@ -98,7 +96,7 @@ def edit(request, pk=0):
             messages.success(request, _sistema.define()['form_save'])
             return redirect(par_app['url_index'])
     else:
-        form = UsuarioForm(instance = row) if pk > 0 else UsuarioInsertForm()
+        form = obj_form(instance = row) if pk > 0 else UsuarioInsertForm()
 
     #grupos
     cursor = connection.cursor()
@@ -121,11 +119,13 @@ def edit(request, pk=0):
         'form' : form,
         'btn_cancel_inative' : 0,
         'auth_group' : auth_group,
-        'auth_group_set' : auth_group_set
+        'auth_group_set' : auth_group_set,
+        'user_perm' : user_perm,
     }
 
     return render(request, par_app['html_form'], context=context)
 
+"""
 @login_required(login_url='login')
 def delete(request, pk=0):  
     # deletar o grupo do usuario
@@ -134,12 +134,37 @@ def delete(request, pk=0):
     cursor.execute(query, [pk]).fetchone()
     
     row = Usuario.objects.get(id=pk).delete() if pk > 0 else ''
-    return redirect('usuario') 
+    return redirect('usuario')"""
+
+@login_required(login_url='login')
+@permission_required('sys_'+_app_name+'.delete_'+_app_name,login_url='index') # (sys_menu.delete_menu) sem permissão, retorna para index
+def delete(request, pk=0):  
+    par_app = init(request)[0]
+    
+    # deletar o grupo do usuario
+    cursor = connection.cursor()
+    query = "delete from USUARIOS_groups where usuario_id = %s"
+    cursor.execute(query, [pk]).fetchone()
+    
+    row = par_app['obj'].objects.get(id=pk).delete() if pk > 0 else '' 
+   
+    if row is not None:
+        ok = True
+        msg = '' 
+    else:
+        ok = True
+        msg = _sistema.define()['msg_erro_delete']
+        
+    return JsonResponse({'ok' : ok, 'msg' : msg})
+    #return redirect(par_app['url_index']) 
+
+
+
 
 @login_required(login_url='login') 
-#@permission_required('usuario.add_usuario',login_url='index') # se sem permissão, retorna para tela de login
 def password(request, pk, btn_cancel_inative=0):
-    row = Usuario.objects.get(id=pk)
+    par_app = init(request)[0]
+    row = par_app['obj'].objects.get(id=pk)
     if request.method == "POST":
         form = PasswordForm(request.POST, instance = row)
         if form.is_valid(): 
@@ -164,10 +189,9 @@ def password(request, pk, btn_cancel_inative=0):
 
 
 @login_required(login_url='login') 
-#@permission_required('usuario.add_usuario',login_url='index') # se sem permissão, retorna para tela de login
 def meusdados(request, pk=0):
-    
-    row = Usuario.objects.get(id=pk)
+    par_app = init(request)[0]
+    row = par_app['obj'].objects.get(id=pk)
 
     if request.method == "POST":
         form = UsuarioMeusDadosForm(request.POST, instance = row)
@@ -185,4 +209,4 @@ def meusdados(request, pk=0):
         'status_inative': 1,
     }
 
-    return render(request, 'usuario_form.html', context=context)
+    return render(request, par_app['html_form'], context=context)

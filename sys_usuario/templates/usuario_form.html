@@ -14,7 +14,7 @@
 
     <div id="content-form">
 
-        <form id="form_edt" method="POST" class="post-form">
+        <form id="form_edt" method="POST" class="post-form" autocomplete="off">
             
             {% csrf_token %}
 
@@ -78,7 +78,7 @@
             <div class="form-group mt-3">
             {% if btn_salvar_inative != True %}
                 <button type="submit" class="btn btn-success btn-end-form"><i class="bi-btn bi-check-circle"></i> Salvar</button>
-                {% endif %}
+            {% endif %}
             {% if btn_cancel_inative != True %}
                 <a class="btn btn-danger btn-end-form" href="{% url 'usuario' %}"><i class="bi-btn bi-x-circle"></i> Cancelar</a>
             {% endif %}

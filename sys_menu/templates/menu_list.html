@@ -9,9 +9,11 @@
 
 <form class="row gy-2 gx-3 align-items-center" method="post">
   {% csrf_token %}
+  {% if user_perm.add and user_perm.change %}
   <div class="col-auto">
     <a class="btn btn-sm btn-success" href="{% url par_app.app_insert %}"><i class="bi-btn bi-plus-circle"></i> Novo</a>
   </div>
+  {% endif %}
   <div class="col-auto">
     <input type="text" name="fil_des" value="{{fil_des}}" class="form-control" placeholder="Descrição" aria-label="Descrição">
   </div>
@@ -41,8 +43,8 @@
         <td>{{ row.MEN_ORD }}</td>
         <td>{{ row.get_status }}</td>
         <td class="bc">
-          <a class="btn btn-sm btn-primary" href="{% url par_app.app_update row.pk %}"><i class="bi-btn bi-pencil-square"></i>  Editar</a>
-          {% if row.MEN_STA != 1 %}<a class="btn btn-sm btn-danger" href="{% url par_app.app_delete row.pk %}"><i class="bi-btn bi-trash"></i>  Deletar</a>{% endif %}
+          {% if user_perm.add and user_perm.change %}<a class="btn btn-sm btn-primary" href="{% url par_app.app_update row.pk %}"><i class="bi-btn bi-pencil-square"></i>  Editar</a>{% endif %}
+          {% if user_perm.delete and row.MEN_STA != 1 %}<a class="btn btn-sm btn-danger" href="javascript:void(0);" onclick="list_delete_msg('{% url par_app.app_delete row.pk %}', $(this), '{{ row.MEN_NOM }}')"><i class="bi-btn bi-trash"></i>  Deletar</a>{% endif %}
         </td>
       </tr>
       {% endfor %}
