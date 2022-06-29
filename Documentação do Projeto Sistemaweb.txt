@@ -13,7 +13,8 @@ sistemaweb/         # Website folder
 	- sys_menu/ # menu do sistema
 	- sys_modulo/ # menu do sistema
 	- sys_permissao/ # permissão do sistema
-		
+	
+	- dashbord_atendimento/
 	
 
 - Pasta para armazenar os projetos
@@ -176,8 +177,17 @@ sistemaweb/         # Website folder
 	
 	- Criar query insert inicial do funcionamentos dos modulos para migração ou deploy de projeto.
 
+	- chart js
+		- 15 Best JavaScript Chart Libraries in 2022
+			- https://www.atatus.com/blog/javascript-chart-libraries/
+				- https://www.chartjs.org/docs/latest/
+				- https://naver.github.io/billboard.js/demo/#Chart.AreaChart
+				- https://apexcharts.com/javascript-chart-demos/
+				- https://nvd3.org/examples/index.html
+				- https://visjs.github.io/vis-timeline/examples/graph2d/
+				- https://formidable.com/open-source/victory/gallery/
 
-	- Layout pronto
+	- Layout adm pronto
 		- Top 42 Free HTML5 Admin Dashboard Templates 2022
 			- https://colorlib.com/wp/free-html5-admin-dashboard-templates/
 		- The 23 Best HTML Dashboard Templates for Admins & Users

@@ -52,7 +52,7 @@ def index(request):
     context = { 'rows': rows, 'fil_des' : fil_des, 'par_app' : par_app, 'user_perm' : user_perm }
 
     if _render:
-        return render(request, 'usuario_list.html', context=context)
+        return render(request, par_app['html_list'], context=context)
     else: 
         return redirect('login')
 
@@ -185,7 +185,7 @@ def password(request, pk, btn_cancel_inative=0):
         'btn_cancel_inative' : btn_cancel_inative,
     }
 
-    return render(request, 'password.html', context=context)
+    return render(request, 'usuario/password.html', context=context)
 
 
 @login_required(login_url='login') 

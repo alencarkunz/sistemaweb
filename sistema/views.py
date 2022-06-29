@@ -20,7 +20,7 @@ def index(request):
     context = { }
 
     if _render:
-        return render(request, 'index.html', context=context)
+        return render(request, 'sistema/index.html', context=context)
     else: 
         return redirect('login') 
 
@@ -95,7 +95,7 @@ def loginUsuario(request):
         'form_login': form_login,
     }
 
-    return render(request, 'login.html', context = context)
+    return render(request, 'sistema/login.html', context = context)
 
 def logoutUsuario(request):
     logout(request)

@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'sys_usuario', # personalisação do user django
     'sys_menu',
     'sys_modulo',
+    
+    'dashbord_atendimento',
 ]
 
 MIDDLEWARE = [

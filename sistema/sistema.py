@@ -41,8 +41,8 @@ def get_parametros_app(request):
         'app_insert': mod['modelo']+'_insert', # url route
         'app_update': mod['modelo']+'_update', # url route
         'app_delete': mod['modelo']+'_delete', # url route
-        'html_list' : mod['modelo']+'_list.html', # render
-        'html_form' : mod['modelo']+'_form.html', # render
+        'html_list' : mod['modelo']+'/list.html', # render mod['modelo']+'_list.html'
+        'html_form' : mod['modelo']+'/form.html', # render mod['modelo']+'_form.html'
         'url_index' : mod['modelo'], # redirect
     }
     return par_app
