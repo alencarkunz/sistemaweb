@@ -1,0 +1,101 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+
+<table>
+  <tr>
+    <td>
+      <div class="chart_1">
+        <canvas id="myChart"></canvas>
+      </div>
+    </td>
+    <td>
+      <div class="chart_1">
+        <canvas id="myChart2"></canvas>
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+<script>
+    const labels = [
+        'Janeiro',
+        'Fevereiro',
+        'Março',
+        'Abril',
+        'Maio',
+        'Junho',
+    ];
+
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Total de atendimentos por Mês',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45],
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+        }
+    };
+
+
+</script>
+
+<script>
+    const myChart = new Chart( document.getElementById('myChart'), config);
+</script>
+
+
+<script>
+
+const labels2 = [
+        'Janeiro',
+        'Fevereiro',
+        'Março',
+        'Abril',
+        'Maio',
+        'Junho',
+    ];
+
+const data2 = {
+    labels: labels2,
+    datasets: [{
+        label: 'Total de atendimentos por Mês',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: [0, 10, 5, 2, 20, 30, 45],
+    }]
+};
+
+const config2 = {
+  type: 'bar',
+  data: data2,
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Chart.js Bar Chart'
+      }
+    }
+  },
+};
+
+const myChart2 = new Chart(document.getElementById('myChart2'), config2);
+
+</script>
+
+
+
+{% endblock %}

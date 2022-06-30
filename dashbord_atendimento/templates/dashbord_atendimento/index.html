@@ -1,66 +1,264 @@
 {% extends "base_generic.html" %}
 
+{% load static %}
+<link rel="stylesheet" href="{% static 'chartjs/chart.css' %}">
+<script src="{% static 'chartjs/chart.js' %}"></script>
+<script src="{% static 'chartjs/utils.js' %}"></script>
+
 
 {% block content %}
 
-<div class="chart_1">
-    <canvas id="myChart"></canvas>
+
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-sm-5 col-md-6">
+      <canvas id="card1"></canvas>
+    </div>
+    <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+      <canvas id="card2"></canvas>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-5 col-md-6">
+      <canvas id="card3"></canvas>
+    </div>
+    <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+      <canvas id="card4"></canvas>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-5 col-md-6">
+      <canvas id="card5"></canvas>
+    </div>
+    <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+      <canvas id="card6"></canvas>
+    </div>
+  </div>
+
 </div>
 
+
+
+
+
+
 <script>
-    const labels = [
-        'Janeiro',
-        'Fevereiro',
-        'Março',
-        'Abril',
-        'Maio',
-        'Junho',
-    ];
+  // card1
+  const labels1 = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'];
+  const dataset1 = [3200, 5000, 2000, 2500, 3800, 4500];
 
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Total de atendimentos por Mês',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45],
-        }]
-    };
+  const data1 = {
+    labels: labels1,
+    datasets: [{
+      label: 'Atendimentos',
+      backgroundColor: transparentize(CHART_COLORS.blue, 0.1),
+      borderColor: transparentize(CHART_COLORS.blue, 1),
+      data: dataset1,
+    }]
+  };
 
-    // const config = {
-    //     type: 'line',
-    //     data: data,
-    //     options: {
-    //     }
-    // };
-
-    const config = {
-  type: 'radar',
-  data: data,
-  options: {
-    plugins: {
-      filler: {
-        propagate: false
-      },
-      'samples-filler-analyser': {
-        target: 'chart-analyser'
+  const config1 = {
+    type: 'line',
+    data: data1,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Total de atendimento por Mês'
+        }
       }
     },
-    interaction: {
-      intersect: false
-    }
-  }
-};
+  };
 
-
+  const card1 = new Chart(document.getElementById('card1'), config1);
+// card1
 </script>
 
 <script>
-    const myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-    );
+  // card2
+
+  const config2 = {
+    type: 'bar',
+    data: data1,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Total de atendimento por Mês'
+        }
+      }
+    },
+  };
+
+  const card2 = new Chart(document.getElementById('card2'), config2);
+// card2
 </script>
 
+
+<script>
+  // card3
+
+  const DATA_COUNT3 = 7;
+  const NUMBER_CFG3 = { count: DATA_COUNT3, min: 0, max: 100 };
+
+  const labels3 = months({ count: 7 });
+  const data3 = {
+    labels: labels3,
+    datasets: [
+      {
+        label: 'Convênios',
+        data: numbers(NUMBER_CFG3),
+        borderColor: CHART_COLORS.red,
+        backgroundColor: transparentize(CHART_COLORS.red, 0.5),
+      },
+      {
+        label: 'Particular',
+        data: numbers(NUMBER_CFG3),
+        borderColor: CHART_COLORS.blue,
+        backgroundColor: transparentize(CHART_COLORS.blue, 0.5),
+      },
+      {
+        label: 'Sus',
+        data: numbers(NUMBER_CFG3),
+        borderColor: CHART_COLORS.orange,
+        backgroundColor: transparentize(CHART_COLORS.orange, 0.5),
+      }
+    ]
+  };
+
+  const config3 = {
+    type: 'bar',
+    data: data3,
+    options: {
+      indexAxis: 'y',
+      // Elements options apply to all of the options unless overridden in a dataset
+      // In this case, we are setting the border of each horizontal bar to be 2px wide
+      elements: {
+        bar: {
+          borderWidth: 2,
+        }
+      },
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'right',
+        },
+        title: {
+          display: true,
+          text: 'Chart.js Horizontal Bar Chart'
+        }
+      }
+    },
+  };
+
+  const card3 = new Chart(document.getElementById('card3'), config3);
+// card3
+</script>
+
+<script>
+  // card5
+
+  const DATA_COUNT4 = 12;
+  const NUMBER_CFG4 = { count: DATA_COUNT4, min: 0, max: 100 };
+  const data4 = {
+    labels: [['June', '2021'], 'July', 'August', 'September', 'October', 'November', 'December', ['January', '2022'], 'February', 'March', 'April', 'May'],
+    datasets: [
+      {
+        label: 'Intenação',
+        data: numbers(NUMBER_CFG4),
+        fill: false,
+        borderColor: CHART_COLORS.red,
+        backgroundColor: transparentize(CHART_COLORS.red, 0.5),
+      },
+      {
+        label: 'Pronto-Atendimento',
+        data: numbers(NUMBER_CFG4),
+        fill: false,
+        borderColor: CHART_COLORS.blue,
+        backgroundColor: transparentize(CHART_COLORS.blue, 0.5),
+      }
+    ]
+  };
+
+  const config4 = {
+    type: 'line',
+    data: data4,
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Atendimentos'
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+            callback: function (val, index) {
+              // Hide every 2nd tick label
+              return index % 2 === 0 ? this.getLabelForValue(val) : '';
+            },
+            color: 'red',
+          }
+        }
+      }
+    },
+  };
+
+
+  const card4 = new Chart(document.getElementById('card4'), config4);
+  // card4
+</script>
+
+
+<script>
+  // card5
+
+  const DATA_COUNT5 = 4;
+  const NUMBER_CFG5 = { count: DATA_COUNT5, min: 0, max: 100 };
+
+  const data5 = {
+    labels: ['Internação', 'Pronto Atendimento', 'Ambulatorial', 'Externos'],
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: numbers(NUMBER_CFG5),
+        backgroundColor: Object.values(CHART_COLORS),
+      }
+    ]
+  };
+
+  const config5 = {
+    type: 'pie',
+    data: data5,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Tipos de Atendimento'
+        }
+      }
+    },
+  };
+
+  const card5 = new Chart(document.getElementById('card5'), config5);
+  // card5
+</script>
 
 {% endblock %}
