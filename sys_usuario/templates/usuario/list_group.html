@@ -11,7 +11,7 @@
   {% csrf_token %}
   {% if user_perm.add and user_perm.change %}
   <div class="col-auto">
-    <a class="btn btn-sm btn-success" href="{% url 'usuario_insert' %}"><i class="bi-btn bi-plus-circle"></i> Novo</a>
+    <a class="btn btn-sm btn-success" href="{% url 'grupo_insert' %}"><i class="bi-btn bi-plus-circle"></i> Novo</a>
   </div>
   {% endif %}
   <div class="col-auto">
@@ -30,9 +30,6 @@
       <tr>
         <th>Código</th>
         <th>Nome</th>
-        <th>Email</th>
-        <th>Usuário</th>
-        <th>Status</th>
         <th class="bc">&nbsp;</th>
       </tr>
     </thead>
@@ -40,14 +37,9 @@
       {% for row in rows %}
       <tr>
         <td>{{ row.id }}</td>
-        <td>{{ row.first_name }}</td>
-        <td>{{ row.email }}</td>
-        <td>{{ row.username }}</td>
-        <td>{{ row.get_status }}</td>
+        <td>{{ row.name }}</td>
         <td class="bc">
-          {% if user_perm.add and user_perm.change %}<a class="btn btn-sm btn-primary" href="{% url par_app.app_update row.pk %}"><i class="bi-btn bi-pencil-square"></i> Editar</a>{% endif %}
-          {% if user_perm.change %}<a class="btn btn-sm btn-warning" href="{% url 'password_update' row.pk %}"><i class="bi-btn bi-lock-fill"></i>  Senha</a>{% endif %}
-          {% if user_perm.delete and row.is_active != True %}<a class="btn btn-sm btn-danger" href="javascript:void(0);" onclick="list_delete_msg('{% url par_app.app_delete row.pk %}', $(this), '{{ row.username }}')"><i class="bi-btn bi-trash"></i> Deletar</a>{% endif %}
+          {% if user_perm.add and user_perm.change %}<a class="btn btn-sm btn-primary" href="{% url 'grupo_update' row.pk %}"><i class="bi-btn bi-pencil-square"></i> Editar</a>{% endif %}
         </td>
       </tr>
       {% endfor %}

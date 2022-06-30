@@ -7,8 +7,9 @@ from django.contrib import messages
 from django.db import connection
 from django.db.models import Q
 
-from sys_usuario.forms import UsuarioForm, UsuarioInsertForm, PasswordForm, UsuarioMeusDadosForm
+from sys_usuario.forms import UsuarioForm, UsuarioInsertForm, PasswordForm, UsuarioMeusDadosForm, GroupForm
 from sys_usuario.models import Usuario
+from django.contrib.auth.models import Group
 import sistema.sistema as _sistema
 import sys_usuario.usuario as _usuario
 
@@ -120,6 +121,7 @@ def edit(request, pk=0):
         'btn_cancel_inative' : 0,
         'auth_group' : auth_group,
         'auth_group_set' : auth_group_set,
+        'par_app' : par_app,
         'user_perm' : user_perm,
     }
 
@@ -210,3 +212,81 @@ def meusdados(request, pk=0):
     }
 
     return render(request, par_app['html_form'], context=context)
+
+
+@login_required(login_url='login') # sem login, retorna para login
+def index_grupo(request):
+    par_app, user_perm, _render = init(request)
+    
+    fil_des = request.POST.get("fil_des",'').rstrip()
+    
+    rows = Group.objects
+
+    if len(fil_des) > 0: 
+        rows = rows.filter(name__iexact=fil_des)
+    else:
+        rows = rows.all()
+
+    #rows = rows.order_by('name')
+    
+    # paginação
+    paginator = Paginator(rows, par_app['modulo']['num_pag'])
+    page = int(request.GET.get('page', '1'))
+    rows = paginator.get_page(page)
+
+    context = { 'rows': rows, 'fil_des' : fil_des, 'par_app' : par_app, 'user_perm' : user_perm }
+
+    if _render:
+        return render(request, 'usuario/list_group.html', context=context)
+    else: 
+        return redirect('login')
+
+@login_required(login_url='login') # sem login, retorna para login
+@permission_required(('sys_'+_app_name+'.add_'+_app_name,'sys_'+_app_name+'.change_'+_app_name),login_url='index') # (sys_menu.add_menu,sys_menu.change_menu) sem permissão, retorna para index
+def edit_grupo(request, pk=0):
+    par_app, user_perm, _render = init(request)
+
+    obj = Group # model
+    obj_form = GroupForm # for
+
+    row = obj.objects.get(id=pk) if pk > 0 else ''
+    if request.method == "POST":
+        if pk > 0:
+            form = obj_form(request.POST, instance = row)
+        else:
+            form = obj_form(request.POST)
+
+        if form.is_valid(): 
+            
+            row = form.save()
+                 
+            messages.success(request, _sistema.define()['form_save'])
+            return redirect('grupo')
+    else:
+        form = obj_form(instance = row) if pk > 0 else obj_form()
+
+
+    context = {
+        'row': row,
+        'form' : form,
+        'btn_cancel_inative' : 0,
+        'par_app' : par_app,
+        'user_perm' : user_perm,
+    }
+
+    return render(request, 'usuario/form_group.html', context=context)
+
+@login_required(login_url='login')
+@permission_required('sys_'+_app_name+'.delete_'+_app_name,login_url='index') # (sys_menu.delete_menu) sem permissão, retorna para index
+def delete_grupo(request, pk=0):  
+    par_app = init(request)[0]
+    row = Group.objects.get(id=pk).delete() if pk > 0 else '' 
+   
+    if row is not None:
+        ok = True
+        msg = '' 
+    else:
+        ok = True
+        msg = _sistema.define()['msg_erro_delete']
+        
+    return JsonResponse({'ok' : ok, 'msg' : msg})

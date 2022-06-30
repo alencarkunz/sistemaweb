@@ -37,7 +37,7 @@ def get_parametros_app(request):
     par_app = { 
         'modulo'    : mod,
         'app_name'  : app_name,
-        'app_title' : mod['titulo'],
+        'app_title' : mod['nome_pagina'] if mod['nome_pagina'] else mod['titulo'],
         'app_insert': mod['modelo']+'_insert', # url route
         'app_update': mod['modelo']+'_update', # url route
         'app_delete': mod['modelo']+'_delete', # url route

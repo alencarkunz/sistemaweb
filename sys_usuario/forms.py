@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import forms as forms_auth
 
 from .models import Usuario
-
+from django.contrib.auth.models import Group, GroupManager
 
 class UsuarioChangeForm(forms_auth.UserChangeForm):
     class Meta(forms_auth.UserChangeForm.Meta):
@@ -45,3 +45,11 @@ class UsuarioMeusDadosForm(forms.ModelForm):
     class Meta:  
         model = Usuario  
         fields = ['username','first_name','last_name','email']
+
+
+class GroupForm(forms.ModelForm):  
+    
+    class Meta:  
+        model = Group  
+        fields = '__all__'
+        #exclude =['password',] #remover field do form

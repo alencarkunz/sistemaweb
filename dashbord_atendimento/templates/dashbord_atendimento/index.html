@@ -1,13 +1,11 @@
 {% extends "base_generic.html" %}
 
+{% block content %}
+
 {% load static %}
 <link rel="stylesheet" href="{% static 'chartjs/chart.css' %}">
 <script src="{% static 'chartjs/chart.js' %}"></script>
 <script src="{% static 'chartjs/utils.js' %}"></script>
-
-
-{% block content %}
-
 
 <div class="container-fluid">
 
@@ -167,7 +165,7 @@
 </script>
 
 <script>
-  // card5
+  // card4
 
   const DATA_COUNT4 = 12;
   const NUMBER_CFG4 = { count: DATA_COUNT4, min: 0, max: 100 };

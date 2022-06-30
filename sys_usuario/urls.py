@@ -9,4 +9,8 @@ urlpatterns = [
     path('meusdados/<int:pk>', views.meusdados, name='meusdados'),
     path('password/<int:pk>', views.password, name='password_update'),
     path('password/<int:pk>/<int:btn_cancel_inative>', views.password, name='meu_password_update'),
+
+    path('grupo/', views.index_grupo, name='grupo'),
+    path('grupo_edit/', views.edit_grupo, name='grupo_insert'),
+    path('grupo_edit/<int:pk>', views.edit_grupo, name='grupo_update'),
 ]

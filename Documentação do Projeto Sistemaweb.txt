@@ -4,15 +4,14 @@ sistemaweb/         # Website folder
     manage.py       # Script to run Django tools for this project (created using django-admin)
     projetoapp/     # Website/project folder (created using django-admin)
 	
-	sistema/ # modelos do sistema > # home page sistema
-	sys_usuario/ # modelo personalizando usuário padrão django
+	- sistema/ # modelos do sistema > # home page sistema
+	- sys_usuario/ # modelo personalizando usuário padrão django
 		python manage.py startapp sys_usuario
 		- Criar modulo antes do migrate
 		- python manage.py createsuperuser
 		
 	- sys_menu/ # menu do sistema
 	- sys_modulo/ # menu do sistema
-	- sys_permissao/ # permissão do sistema
 	
 	- dashbord_atendimento/
 	

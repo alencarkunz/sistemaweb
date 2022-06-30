@@ -10,12 +10,14 @@ class Modulo(models.Model):
 
     MOD_ID = models.AutoField(primary_key=True, verbose_name="Código")
     MOD_NOM = models.CharField(max_length=100, verbose_name="Nome")
+    MOD_NOMPAG = models.CharField(max_length=100, verbose_name="Título Página")
 
     cursor = connection.cursor()
     query = 'select dct.model, dct.model app_label  from django_content_type dct order by dct.model' ## dct.app_label
     list_choices = cursor.execute(query).fetchall()
 
     MOD_MDL = models.CharField(max_length=100, choices=list_choices,verbose_name="Modelo")
+    MOD_MDLDNM = models.CharField(max_length=100,verbose_name="Modelo Dinâmico", blank=True, null=True)
 
     MEN_ID = models.ForeignKey(Menu, db_column='MEN_ID', on_delete=models.PROTECT, verbose_name="Menu")
     MOD_NUMPAG = models.SmallIntegerField(verbose_name="Paginas", default=25)

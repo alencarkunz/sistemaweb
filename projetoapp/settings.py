@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'sistema', #home page sistema
     'sys_usuario', # personalisação do user django
+    
     'sys_menu',
     'sys_modulo',
     

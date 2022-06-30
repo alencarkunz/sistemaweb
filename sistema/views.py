@@ -1,4 +1,5 @@
 import json
+from tkinter import NO
 from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
@@ -41,7 +42,8 @@ def loginUsuario(request):
             #montar menu e modulos conforme permissões
             cursor = connection.cursor()
             query = """ select 
-                            distinct m.MOD_ID, m.MOD_NOM, m.MOD_MDL, m.MEN_ID, me.MEN_NOM, m.MOD_NUMPAG
+                            distinct m.MOD_ID, m.MOD_NOM, m.MOD_MDL, m.MEN_ID, me.MEN_NOM, m.MOD_NUMPAG, 
+                                m.MOD_MDLDNM, m.MOD_NOMPAG 
                         from USUARIOS_groups ug
                             inner join auth_group_permissions agp on ug.group_id  = agp.group_id 
                             inner join auth_permission ap on agp.permission_id = ap.id 
@@ -60,10 +62,11 @@ def loginUsuario(request):
             menu = []
             modulo_app = {}
             for row in result:
+                rot = row[6] if row[6] is not None and len(row[6]) > 1 else row[2] 
                 modulo.append({
                     'id' : row[0], 
                     'nome' : row[1],
-                    'rot' : row[2],
+                    'rot' : rot, #row[2],
                     'menu_id' : row[3],
                 })
 
@@ -74,6 +77,7 @@ def loginUsuario(request):
                 modulo_app[row[2]] = {
                     'modelo' : row[2],
                     'titulo' : row[1],
+                    'nome_pagina' : row[7],
                     'num_pag' : (row[5] if row[5] > 0 else '25'),
                 }
                 
