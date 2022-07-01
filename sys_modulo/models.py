@@ -12,8 +12,11 @@ class Modulo(models.Model):
     MOD_NOM = models.CharField(max_length=100, verbose_name="Nome")
     MOD_NOMPAG = models.CharField(max_length=100, verbose_name="Título Página")
 
-    cursor = connection.cursor()
-    query = 'select dct.model, dct.model app_label  from django_content_type dct order by dct.model' ## dct.app_label
+    cursor = connection.cursor() 
+    query = 'select dct.model, dct.model app_label' ## dct.app_label
+    query += ' from django_content_type dct'
+    query += ' where dct.model <> "contenttype" and dct.model <> "logentry"'
+    query += ' order by dct.model'
     list_choices = cursor.execute(query).fetchall()
 
     MOD_MDL = models.CharField(max_length=100, choices=list_choices,verbose_name="Modelo")
@@ -22,7 +25,7 @@ class Modulo(models.Model):
     MEN_ID = models.ForeignKey(Menu, db_column='MEN_ID', on_delete=models.PROTECT, verbose_name="Menu")
     MOD_NUMPAG = models.SmallIntegerField(verbose_name="Paginas", default=25)
     MOD_ORD = models.SmallIntegerField(verbose_name="Ordem")
-    MOD_STAMEN = models.SmallIntegerField(verbose_name="Status Menu", default=1)
+    MOD_STAMEN = models.BooleanField(verbose_name="Status Menu", default=1)
     MOD_STA = models.BooleanField(verbose_name="Status", default=1)
     
     
@@ -30,7 +33,7 @@ class Modulo(models.Model):
         return self.MOD_NOM
     
     def get_status(AbstractUser):
-        returno = 'Inativo'
+        retorno = 'Inativo'
         if AbstractUser.MOD_STA == 1:
-            returno = 'Ativo'
-        return returno
+            retorno = 'Ativo'
+        return retorno

@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import permission_required, login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.http import JsonResponse
 from django.contrib import messages
+from sys_acessos.models import Acessos
 
 from sys_modulo.models import Modulo
 from sys_modulo.forms import ModuloForm
@@ -19,6 +20,9 @@ def init(request):
     _par_app['obj'] = Modulo
     _par_app['obj_form'] = ModuloForm
     
+    #registros de acessos
+    Acessos.set_acessos(request)
+
     return _par_app, _user_perm, _render
 
 @login_required(login_url='login')
@@ -30,9 +34,11 @@ def index(request):
     rows = par_app['obj'].objects  
 
     if len(fil_des) > 0: 
-        rows = rows.filter(MOD_NOM__iexact=fil_des)
+        rows = rows.filter(MOD_NOM__contains=fil_des)
     else:
         rows = rows.all()
+
+    rows = rows.order_by('MEN_ID__MEN_ORD','MOD_ORD') # MEN_ID__MEN_ORD join do Menu
 
     # paginação
     paginator = Paginator(rows, par_app['modulo']['num_pag']) 

@@ -6,14 +6,15 @@ def validar_sessao(request):
     return row_usuario.check_session(request)
 
 
-def get_view_permissao(app_name, get_group_permissions):
+def get_view_permissao(app_name, get_group_permissions, modulo = None):
     # retorn permissões do modulo app
     # modulo = 'menu'
     # get_group_permissions = request.user.get_group_permissions()
     perm = {}
- 
-    modulo = 'sys_'+app_name #sys_usuario.views
-
+    
+    if modulo is None:
+        modulo = 'sys_'+app_name #sys_usuario.views
+    
     if (modulo+'.view_'+app_name in list(get_group_permissions)): # 'sys_usuario.view_usuario' in
         perm['view'] = True
     else:

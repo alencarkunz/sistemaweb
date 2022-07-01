@@ -31,8 +31,10 @@
         <th>Código</th>
         <th>Nome</th>
         <th>Modelo</th>
+        <th>Mod. Dinâmico</th>
         <th>Menu</th>
-        <th>Ordem</th>
+        <th>Ord Menu</th>
+        <th>Ord Módulo</th>
         <th>Status</th>
         <th class="bc">&nbsp;</th>
       </tr>
@@ -43,7 +45,9 @@
         <td>{{ row.MOD_ID }}</td>
         <td>{{ row.MOD_NOM }}</td>
         <td>{{ row.MOD_MDL }}</td>
+        <td>{{ row.MOD_MDLDNM }}</td>
         <td>{{ row.MEN_ID }}</td>
+        <td>{{ row.MEN_ID.MEN_ORD }}</td>
         <td>{{ row.MOD_ORD }}</td>
         <td>{{ row.get_status }}</td>
         <td class="bc">

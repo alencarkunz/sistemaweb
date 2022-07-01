@@ -5,11 +5,13 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.urls import resolve
 
-
 from sys_menu.models import Menu
 from sys_menu.forms import MenuForm
 import sistema.sistema as _sistema
 import sys_usuario.usuario as _usuario
+from sys_acessos.models import Acessos
+
+
 
 _app_name = 'menu'
 ## parametro para o app
@@ -21,18 +23,21 @@ def init(request):
     _par_app['obj'] = Menu
     _par_app['obj_form'] = MenuForm
     
+    #registros de acessos
+    Acessos.set_acessos(request)
+
     return _par_app, _user_perm, _render
 
 @login_required(login_url='login')
 def index(request):  
     par_app, user_perm, _render = init(request)
-
+    
     fil_des = request.POST.get("fil_des",'').rstrip()
 
     rows = par_app['obj'].objects  
 
     if len(fil_des) > 0: 
-        rows = rows.filter(MEN_NOM__iexact=fil_des)
+        rows = rows.filter(MEN_NOM__contains=fil_des)
     else:
         rows = rows.all()
 
@@ -54,7 +59,7 @@ def index(request):
 @permission_required(('sys_'+_app_name+'.add_'+_app_name,'sys_'+_app_name+'.change_'+_app_name),login_url='index') # (sys_menu.add_menu,sys_menu.change_menu) sem permissão, retorna para index
 def edit(request, pk=0):
     par_app, user_perm, _render = init(request)
-
+    
     obj = par_app['obj'] # model
     obj_form = par_app['obj_form'] # form
 

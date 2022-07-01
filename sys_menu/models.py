@@ -16,10 +16,10 @@ class Menu(models.Model):
         return self.MEN_NOM
     
     def get_status(AbstractUser):
-        returno = 'Inativo'
+        retorno = 'Inativo'
         if AbstractUser.MEN_STA == 1:
-            returno = 'Ativo'
-        return returno
+            retorno = 'Ativo'
+        return retorno
     
 
 

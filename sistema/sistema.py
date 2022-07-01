@@ -31,8 +31,9 @@ def define():
 
     return par
 
-def get_parametros_app(request):
-    app_name = resolve(request.path).route.split('/')[0]
+def get_parametros_app(request,app_name = None):
+    if app_name is None:
+        app_name = resolve(request.path).route.split('/')[0]
     mod = request.session['modelo_app'][app_name]
     par_app = { 
         'modulo'    : mod,

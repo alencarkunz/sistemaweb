@@ -11,7 +11,8 @@ sistemaweb/         # Website folder
 		- python manage.py createsuperuser
 		
 	- sys_menu/ # menu do sistema
-	- sys_modulo/ # menu do sistema
+	- sys_modulo/ # 
+	- sys_acessos/ # 
 	
 	- dashbord_atendimento/
 	

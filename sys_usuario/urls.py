@@ -11,6 +11,7 @@ urlpatterns = [
     path('password/<int:pk>/<int:btn_cancel_inative>', views.password, name='meu_password_update'),
 
     path('grupo/', views.index_grupo, name='grupo'),
-    path('grupo_edit/', views.edit_grupo, name='grupo_insert'),
-    path('grupo_edit/<int:pk>', views.edit_grupo, name='grupo_update'),
+    path('grupo_edit/', views.edit_grupo, name='group_insert'),
+    path('grupo_edit/<int:pk>', views.edit_grupo, name='group_update'),
+    path('grupo_delete/<int:pk>', views.delete_grupo, name='group_delete'),
 ]

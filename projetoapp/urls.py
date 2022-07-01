@@ -21,5 +21,6 @@ urlpatterns += [
     path('usuario/', include('sys_usuario.urls')), 
     path('menu/', include('sys_menu.urls')),
     path('modulo/', include('sys_modulo.urls')), 
+    path('acessos/', include('sys_acessos.urls')), 
     path('dashbordatendimento/', include('dashbord_atendimento.urls')),
 ] 

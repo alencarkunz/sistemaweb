@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     
     'sys_menu',
     'sys_modulo',
+    'sys_acessos',
     
     'dashbord_atendimento',
 ]

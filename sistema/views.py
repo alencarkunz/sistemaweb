@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 from django.db import connection
+from sys_acessos.models import Acessos
 
 from sys_modulo.models import Modulo
 from sys_menu.models import Menu
@@ -13,10 +14,19 @@ from sys_usuario.models import Usuario
 import sistema.sistema as _sistema
 import sys_usuario.usuario as _usuario
 
+_app_name = 'sistema'
+## parametro para o app
+def init(request):
+    _render = _usuario.validar_sessao(request)
+    
+     #registros de acessos
+    Acessos.set_acessos(request)
+
+    return _render
 
 @login_required(login_url='login') # se não logado, retorna para tela de login
 def index(request):
-    _render = _usuario.validar_sessao(request)
+    _render = init(request)
     
     context = { }
 
@@ -102,6 +112,7 @@ def loginUsuario(request):
     return render(request, 'sistema/login.html', context = context)
 
 def logoutUsuario(request):
+    _render = init(request)
     logout(request)
     return redirect('index')
     
