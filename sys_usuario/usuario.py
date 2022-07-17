@@ -2,8 +2,8 @@ from sys_usuario.models import Usuario
 
 def validar_sessao(request):
     #validar sessão do usuario - apenas um login
-    row_usuario = Usuario.objects.get(pk=request.user.id)
-    return row_usuario.check_session(request)
+    usuario = Usuario.objects.get(pk=request.user.id)
+    return usuario.check_session(request)
 
 
 def get_view_permissao(app_name, get_group_permissions, modulo = None):

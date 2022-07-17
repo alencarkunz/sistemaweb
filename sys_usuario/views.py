@@ -21,8 +21,7 @@ _app_name = 'usuario'
 def init(request, app_name=_app_name, modulo=None):
     _par_app = _sistema.get_parametros_app(request, app_name)
     _render = _usuario.validar_sessao(request)
-    _user_perm = _usuario.get_view_permissao(
-        app_name, request.user.get_group_permissions(), modulo)
+    _user_perm = _usuario.get_view_permissao(app_name, request.user.get_group_permissions(), modulo)
 
     _par_app['obj'] = Usuario
     _par_app['obj_form'] = UsuarioForm
@@ -36,7 +35,6 @@ def init(request, app_name=_app_name, modulo=None):
 @login_required(login_url='login')
 def index(request):
     par_app, user_perm, _render = init(request)
-    print(par_app)
     fil_des = request.POST.get("fil_des", '').rstrip()
 
     rows = Usuario.objects

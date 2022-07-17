@@ -17,23 +17,22 @@ class Usuario(AbstractUser):
         db_table = 'USUARIOS' # definir nome da tabela
         ordering = ['username'] # definir para não dar warning do pagination no console 
         
-    def get_status(AbstractUser):
+    def get_status(self):
         retorno = 'Inativo'
-        if AbstractUser.is_active == True:
+        if self.is_active == True:
             retorno = 'Ativo'
 
         return retorno
     
-    def get_is_checked(AbstractUser):
+    def get_is_checked(self):
         retorno = ''
-        if AbstractUser.is_active == True:
+        if self.is_active == True:
             retorno = 'checked'
         return retorno
     
-    def get_session_key(AbstractUser):
-        return AbstractUser.session_key
+    def get_session_key(self):
+        return self.session_key
     
-
     def check_session(self,request):
         if self.session_key != request.session._session_key:
             messages.warning(request, "Outra sessão está em uso!" )
