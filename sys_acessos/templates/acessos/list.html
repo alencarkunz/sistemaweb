@@ -28,6 +28,7 @@
         <th>URL</th>
         <th>Usuario</th>
         <th>IP</th>
+        <th>Method</th>
         <th class="bc">&nbsp;</th>
       </tr>
     </thead>
@@ -39,6 +40,7 @@
         <td>{{ row.ACE_URL }}</td>
         <td>{{ row.get_usuario }}</td>
         <td>{{ row.ACE_IP }}</td>
+        <td>{{ row.ACE_MTD }}</td>
         <td class="bc">
           {% if user_perm.add and user_perm.change %}<a class="btn btn-sm btn-primary" href="{% url par_app.app_update row.pk %}"><i class="bi-btn bi-pencil-square"></i>  Editar</a>{% endif %}
         </td>

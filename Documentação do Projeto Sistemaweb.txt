@@ -168,14 +168,13 @@ sistemaweb/         # Website folder
 	
 - PROXIMOS MODULOS A CRIAR		
 		
-	- Módulo para criar grupo de permissão do padrão django
-		- utilizar o model do django - User
-	
-	- Criar captura de acesso da url, todos as acões - modulos acessos
-		- Criar dashbord de estatisticas dos acesso, alterações e ultimas alterações
-			- Mostrar na inicial tbm
+	- Criar dashbord de estatisticas dos acesso, alterações e ultimas alterações
+		- Mostrar na inicial tbm
 	
 	- Criar query insert inicial do funcionamentos dos modulos para migração ou deploy de projeto.
+
+	- Criar app de captura de informações/indicadores no tasy para django/flask
+
 
 	- chart js
 		- 15 Best JavaScript Chart Libraries in 2022

@@ -10,6 +10,7 @@ from sys_acessos.models import Acessos
 from sys_acessos.forms import AcessosForm
 import sistema.sistema as _sistema
 import sys_usuario.usuario as _usuario
+from sys_acessos.models import Acessos
 
 _app_name = 'acessos'
 ## parametro para o app
@@ -21,6 +22,9 @@ def init(request):
     _par_app['obj'] = Acessos
     _par_app['obj_form'] = AcessosForm
     
+    #registros de acessos
+    Acessos.set_acessos(request)
+
     return _par_app, _user_perm, _render
 
 @login_required(login_url='login')

@@ -15,6 +15,7 @@ class Acessos(models.Model):
     ACE_DATHOR = models.DateTimeField(verbose_name="Data e Hora", auto_now_add=True)
     ACE_PST = models.TextField(verbose_name="Post")
     ACE_IP = models.CharField(max_length=20, verbose_name="IP")
+    ACE_MTD = models.CharField(max_length=20, verbose_name="Method", null=True)
 
     def get_usuario(self):
         obj = Usuario.objects.get(pk=self.id_usuario)
@@ -33,6 +34,7 @@ class Acessos(models.Model):
             id_usuario = request.user.id, 
             ACE_PST = request.POST.dict(),
             ACE_IP = ip,
+            ACE_MTD = request.method,
         )
 
         return obj.save()

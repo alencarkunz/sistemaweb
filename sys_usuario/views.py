@@ -45,6 +45,9 @@ def index(request):
         rows = rows.filter(Q(id__exact=request.user.id) | Q(
             groups__gt=1))  # groups join com USUARIOS_groups
 
+    if user_perm['view'] == True and user_perm['add'] == False and user_perm['change'] == False:
+        rows = rows.filter(id__exact=request.user.id)
+
     if len(fil_des) > 0:
         rows = rows.filter(first_name__contains=fil_des)
     else:
@@ -213,13 +216,16 @@ def meusdados(request, pk=0):
             # return redirect('index')
     else:
         form = UsuarioMeusDadosForm(instance=row)
-
+    
+    par_app['app_title'] = 'Meu Cadastro'
+ 
     context = {
         'row': row,
         'form': form,
         'btn_cancel_inative': 1,
         'per_id_inative': 1,
         'status_inative': 1,
+        'par_app': par_app,
     }
 
     return render(request, par_app['html_form'], context=context)

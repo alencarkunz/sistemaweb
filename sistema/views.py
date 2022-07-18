@@ -19,7 +19,7 @@ _app_name = 'sistema'
 def init(request):
     _render = _usuario.validar_sessao(request)
     
-     #registros de acessos
+    #registros de acessos
     Acessos.set_acessos(request)
 
     return _render
