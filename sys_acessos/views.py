@@ -10,7 +10,8 @@ from sys_acessos.models import Acessos
 from sys_acessos.forms import AcessosForm
 import sistema.sistema as _sistema
 import sys_usuario.usuario as _usuario
-from sys_acessos.models import Acessos
+import sistema.utils as _utils
+from datetime import datetime 
 
 _app_name = 'acessos'
 ## parametro para o app
@@ -22,23 +23,37 @@ def init(request):
     _par_app['obj'] = Acessos
     _par_app['obj_form'] = AcessosForm
     
-    #registros de acessos
-    Acessos.set_acessos(request)
-
     return _par_app, _user_perm, _render
 
 @login_required(login_url='login')
 def index(request):  
     par_app, user_perm, _render = init(request)
     
-    fil_des = request.POST.get("fil_des",'').rstrip()
+    rqp = _utils.get_parm_gp(request)
+    
+    fil_datini = rqp.get("fil_datini",'').rstrip()
+    fil_datfim = rqp.get("fil_datfim",'').rstrip()
+    fil_des = rqp.get("fil_des",'').rstrip()
+    fil_mtd = rqp.get("fil_mtd",'').rstrip()
 
     rows = par_app['obj'].objects  
+
+    if len(fil_datini) > 0: 
+        _fil_datini = datetime.strptime(fil_datini+' 00:00:00', '%d/%m/%Y %H:%M:%S')
+        rows = rows.filter(ACE_DATHOR__gte=_fil_datini)
+
+    if len(fil_datfim) > 0: 
+        _fil_datfim = datetime.strptime(fil_datfim+' 23:59:59', '%d/%m/%Y %H:%M:%S')
+        rows = rows.filter(ACE_DATHOR__lte=_fil_datfim)
 
     if len(fil_des) > 0: 
         #rows = rows.filter(ACE_URL__contains=fil_des)
         rows = rows.filter(Q(ACE_URL__contains=fil_des) | Q(ACE_PST__contains=fil_des))  
-    else:
+    
+    if len(fil_mtd) > 0: 
+        rows = rows.filter(ACE_MTD__contains=fil_mtd)  
+
+    if len(fil_des) <= 0 and len(fil_mtd) <= 0:
         rows = rows.all()
 
     rows = rows.order_by('-ACE_DATHOR')
@@ -47,9 +62,21 @@ def index(request):
     paginator = Paginator(rows, par_app['modulo']['num_pag']) 
     page = int(request.GET.get('page', '1'))
     rows = paginator.get_page(page)
+    get_url_pag = _utils.get_param_to_url(request)
 
+    sel_mtd = ('GET','POST')
     
-    context = { 'rows': rows, 'fil_des' : fil_des, 'par_app' : par_app, 'user_perm' : user_perm }
+    context = { 
+        'rows': rows, 
+        'fil_des' : fil_des, 
+        'par_app' : par_app, 
+        'user_perm' : user_perm, 
+        'fil_datini' : fil_datini, 
+        'fil_datfim' : fil_datfim,
+        'fil_mtd' : fil_mtd, 
+        'sel_mtd' : sel_mtd,
+        'get_url_pag' : get_url_pag,
+    }
 
     if _render:
         return render(request, par_app['html_list'], context=context)

@@ -9,8 +9,23 @@
 
 <form class="row gy-2 gx-3 align-items-center" method="post">
   {% csrf_token %}
+
+  <div class="col-auto">
+    <input type="text" name="fil_datini" value="{{fil_datini}}" class="form-control data" placeholder="Data Inicial" aria-label="Data Inicial">
+  </div>
+  <div class="col-auto">
+    <input type="text" name="fil_datfim" value="{{fil_datfim}}" class="form-control data" placeholder="Data Final" aria-label="Data Final">
+  </div>
   <div class="col-auto">
     <input type="text" name="fil_des" value="{{fil_des}}" class="form-control" placeholder="Descrição" aria-label="Descrição">
+  </div>
+  <div class="col-auto">
+      <select name="fil_mtd" class="form-select">
+        <option value="">Todos</option> 
+        {% for sel in sel_mtd %}
+          <option value="{{ sel }}" {% if sel == fil_mtd %}selected{% endif %}>{{ sel }}</option>
+        {% endfor %}
+      </select>
   </div>
   <div class="col-auto">
     <button type="submit" class="btn btn-secondary"><i class="bi-btn bi-search"></i> Pesquisar</button>
@@ -36,7 +51,7 @@
       {% for row in rows %}
       <tr>
         <td>{{ row.ACE_ID }}</td>
-        <td>{{ row.ACE_DATHOR }}</td>
+        <td>{{ row.ACE_DATHOR|date:'d/m/Y H:i' }}</td>
         <td>{{ row.ACE_URL }}</td>
         <td>{{ row.get_usuario }}</td>
         <td>{{ row.ACE_IP }}</td>

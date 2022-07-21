@@ -19,6 +19,8 @@ $(document).ready(function(){
 
     $("form").submit(function(){ modal(); if($(this).attr('name') != 'form_edt'){ setTimeout(function(){ remove_modal(); }, 2000); } });
 
+    dataPicker($('.data')); 
+
     setTimeout(tooltip(), 1000);
 
     //setTimeout(function(){ $('#ak-messages').hide( 500, function() { $( this ).remove(); }) }, 3000); 
@@ -108,4 +110,23 @@ function list_delete_msg(url, _this,desc)
             
         }, 'json');
     }
+}
+
+function dataPicker(el)
+{
+    el.datepicker({
+        //showOn: 'both',//"button",
+        //buttonImage: URLSITE +"/public/media/images/sys/calendario.png",
+        //buttonImageOnly: true,
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+        nextText: 'Próximo',
+        prevText: 'Anterior'
+    });
 }
