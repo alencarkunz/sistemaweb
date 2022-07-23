@@ -200,6 +200,8 @@ sistemaweb/         # Website folder
 		
 
 
+- pip freeze requirements.txt
+
 - DEPLOY heroku - https://id.heroku.com/login
 	- https://developer.mozilla.org/pt-BR/docs/Learn/Server-side/Django/Deployment#preparando_seu_site_para_publica%C3%A7%C3%A3o
 		
@@ -230,4 +232,24 @@ heroku run python manage.py migrate
 4 - run collectstatic using bower
 heroku run 'bower install --config.interactive=false;grunt prep;python manage.py collectstatic --noinput'
 
+5 - enable collecstatic for future deploys - ARRUMA CSS DO ADMIN TAMBÉM
+heroku config:unset DISABLE_COLLECTSTATIC 
 
+6 - try it on your own (optional) - ARRUMA CSS DO ADMIN TAMBÉM
+heroku run python manage.py collectstatic
+
+7 - Se necessário criar usuário login
+	- heroku run python manage.py createsuperuser
+
+8 - DEPLOY a cada mudança
+	- GIT DEPLOY
+		git add -A
+		git status
+		git commit -m "commit"
+		git push origin main
+		
+	- HEROKU DEPLOY
+		git push heroku main
+		
+9 - Log heroku
+	heroku logs --tail
