@@ -23,11 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=!v2!3hqs)h0x3_ciir#3xgj*ns7%vo&#y@lco=-&506e+0*y$'
 #SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '=!v2!3hqs)h0x3_ciir#3xgj*ns7%vo&#y@lco=-&506e+0*y$') #production
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+#DEBUG = True
 #DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False' #production
-#DEBUG = False #production or
-ALLOWED_HOSTS = []
-#ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1]','nameless-river-13197.herokuapp.com'] #production
+DEBUG = False #production
+
+#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1]','https://pure-savannah-09394.herokuapp.com/'] #production
 
 
 # Application definition
