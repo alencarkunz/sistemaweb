@@ -215,6 +215,7 @@ sistemaweb/         # Website folder
 			git branch -M main
 			git remote add origin https://github.com/alencarkunz/sistemaweb.git
 			git push -u origin main
+				git push origin main
 			
 			
 	- D:\Python\django\sistemaweb>
