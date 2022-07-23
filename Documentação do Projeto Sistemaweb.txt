@@ -199,3 +199,35 @@ sistemaweb/         # Website folder
 		- layout bonito 		https://preview.themeforest.net/item/vuexy-vuejs-html-laravel-admin-dashboard-template/full_screen_preview/23328599?_ga=2.141732786.1883632591.1656384616-914970199.1656384616&_gac=1.213125792.1656384624.EAIaIQobChMIseXGxpHP-AIVYuhcCh2ZQQH_EAAYASAAEgJDpfD_BwE
 		
 
+
+- DEPLOY heroku - https://id.heroku.com/login
+	- https://developer.mozilla.org/pt-BR/docs/Learn/Server-side/Django/Deployment#preparando_seu_site_para_publica%C3%A7%C3%A3o
+		
+	- D:\Python\django\sistemaweb>
+		- heroku create
+	
+	 »   Warning: heroku update available from 7.53.0 to 7.60.2.
+	Creating app... !
+	 !    Invalid credentials provided.
+	 »   Warning: heroku update available from 7.53.0 to 7.60.2.
+	heroku: Press any key to open up the browser to login or q to exit:
+	Opening browser to https://cli-auth.heroku.com/auth/cli/browser/5c7b04a7-8378-4ffa-8b23-dd743baa3e6f?requestor=SFMyNTY.g2gDbQAAAA0xOTEuMjUxLjEwLjk4bgYAQGxoK4IBYgABUYA.Hxl0R4VMFXKgxmPTMV5t8jQLlh2VucmMRSqyQ6LIYpc
+	Logging in... done
+	Logged in as alenkar.k@gmail.com
+	Creating app... done, ⬢ pure-savannah-09394
+	https://pure-savannah-09394.herokuapp.com/ | https://git.heroku.com/pure-savannah-09394.git
+	
+1 - disable the collectstatic during a deploy
+heroku config:set DISABLE_COLLECTSTATIC=1
+
+2 - deploy
+git push heroku main
+
+3 - run migrations (django 1.10 added at least one) - se usar banco de dados no servidor
+heroku run python manage.py makemigrations
+heroku run python manage.py migrate
+
+4 - run collectstatic using bower
+heroku run 'bower install --config.interactive=false;grunt prep;python manage.py collectstatic --noinput'
+
+
