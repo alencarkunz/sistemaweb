@@ -200,7 +200,7 @@ sistemaweb/         # Website folder
 		
 
 
-- pip freeze requirements.txt
+- pip freeze > requirements.txt
 
 - DEPLOY heroku - https://id.heroku.com/login
 	- https://developer.mozilla.org/pt-BR/docs/Learn/Server-side/Django/Deployment#preparando_seu_site_para_publica%C3%A7%C3%A3o
@@ -266,3 +266,8 @@ heroku run python manage.py collectstatic
 		
 9 - Log heroku
 	heroku logs --tail
+	
+
+10 - Buildpacks - Definir linguagem dos código > heroku/python 
+	- Erro > No default language could be detected for this app.
+	- https://dashboard.heroku.com/apps/pure-savannah-09394/settings
