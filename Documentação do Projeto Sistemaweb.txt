@@ -204,7 +204,19 @@ sistemaweb/         # Website folder
 
 - DEPLOY heroku - https://id.heroku.com/login
 	- https://developer.mozilla.org/pt-BR/docs/Learn/Server-side/Django/Deployment#preparando_seu_site_para_publica%C3%A7%C3%A3o
-		
+			
+			
+	- git
+		- Se pasta ja ter todos os arquivos
+			
+			git init
+			git add README.md
+			git commit -m "first commit"
+			git branch -M main
+			git remote add origin https://github.com/alencarkunz/sistemaweb.git
+			git push -u origin main
+			
+			
 	- D:\Python\django\sistemaweb>
 		- heroku create
 	
